@@ -22,12 +22,12 @@ class EnigmaM3:
         self.positions[2] = (self.positions[2] + 1) % 26
 
         # Rotate the middle rotor
-        if self.positions[2] == ord(self.rotors[2].turnover) - 65:
-            self.positions[1] = (self.positions[2] + 1) % 26
+        if self.positions[2] == ord(self.rotors[2].turnover) + 1  - 65:
+            self.positions[1] = (self.positions[1] + 1) % 26
 
         # Rotate the leftmost rotor
-        if self.positions[1] == ord(self.rotors[1].turnover) - 65:
-            self.positions[0] = (self.positions[2] + 1) % 26
+        if self.positions[1] == ord(self.rotors[1].turnover) + 1 - 65:
+            self.positions[0] = (self.positions[0] + 1) % 26
 
         print(self.positions)
 
@@ -56,13 +56,13 @@ class EnigmaM3:
 
             # Step 5: Rotors (backward)
             letter = self.rotors[0].encrypt_backward(letter, self.positions[0], None)
-            print("Rotor " + str(0) + ": " + letter)
-            letter = self.rotors[0].encrypt_backward(letter, self.positions[1], self.positions[0])
             print("Rotor " + str(1) + ": " + letter)
-            letter = self.rotors[1].encrypt_backward(letter, self.positions[2], self.positions[1])
+            letter = self.rotors[0].encrypt_backward(letter, self.positions[1], self.positions[0])
             print("Rotor " + str(2) + ": " + letter)
-            letter = self.rotors[2].encrypt_backward(letter, None, self.positions[2])
+            letter = self.rotors[1].encrypt_backward(letter, self.positions[2], self.positions[1])
             print("Rotor " + str(3) + ": " + letter)
+            letter = self.rotors[2].encrypt_backward(letter, None, self.positions[2])
+            print("result: " + letter)
 
             # # Step 6: Plugboard
             # letter = self.plugboard.get(letter, letter)
@@ -89,13 +89,13 @@ class Rotor:
         print(position)
         print(ord(letter) - 65)
         
-        if (position) % 26 > (ord(letter) - 65) % 26 or prev_position == None: # ini bisa > atau >= belom tau
+        if prev_position == None: # ini bisa > atau >= belom tau
             print((position + ord(letter) - 65) % 26)
-            print("")
+            print("con 1")
             return self.wiring[((position + ord(letter) - 65) % 26)]
         else:
             print((position + ord(letter) - 65 - prev_position) % 26)
-            print("")
+            print("con 2")
             return self.wiring[((position + ord(letter) - 65 - prev_position) % 26)]
 
     def encrypt_reflect(self, letter, prev_position):
@@ -123,18 +123,12 @@ class Rotor:
             print(index)
             print("n")
             return chr(((index - prev_position) % 26) + 65)
-        elif (position) % 26 > (prev_position) % 26:
-            # find index of letter in wiring
-            index = self.wiring.find(letter)
-            print(index)
-            print("m")
-            return chr(((index + position) % 26) + 65)
         else:
             # find index of letter in wiring
             index = self.wiring.find(letter)
             print(index)
-            print("s")
-            return chr(((index - prev_position) % 26) + 65)
+            print("m")
+            return chr(((index + position - prev_position) % 26) + 65)
 
 # config
 rotor_I_wiring = 'EKMFLGDQVZNTOWYHXUSPAIBRCJ'
@@ -157,7 +151,7 @@ plugboard_config = [(None, None), (None, None), (None, None), (None, None), (Non
 
 enigma = EnigmaM3(rotor_config, rotor_positions, reflector_config, plugboard_config)
 
-plaintext = 'BDZ'
+plaintext = 'AAAAAAAAAAAAAAAAAAAAAAAAA'
 ciphertext = enigma.encrypt(plaintext)
 print('Ciphertext:', ciphertext)
 
