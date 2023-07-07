@@ -29,7 +29,7 @@ class EnigmaM3:
         if self.positions[1] == ord(self.rotors[1].turnover) + 1 - 65:
             self.positions[0] = (self.positions[0] + 1) % 26
 
-        print(self.positions)
+        print(chr(self.positions[0] + 65) + chr(self.positions[1] + 65) + chr(self.positions[2] + 65))
 
     def _encrypt_letter(self, letter):
         if letter in string.ascii_uppercase:
@@ -40,7 +40,7 @@ class EnigmaM3:
 
             # Step 2: Plugboard
             letter = self.plugboard.get(letter, letter)
-            print("Plugboard: " + letter)
+            print("Plugboard input: " + letter)
 
             # Step 3: Rotors (forward)
             letter = self.rotors[2].encrypt_forward(letter, self.positions[2], None)
@@ -62,10 +62,11 @@ class EnigmaM3:
             letter = self.rotors[1].encrypt_backward(letter, self.positions[2], self.positions[1])
             print("Rotor " + str(3) + ": " + letter)
             letter = self.rotors[2].encrypt_backward(letter, None, self.positions[2])
-            print("result: " + letter)
+            print("Result: " + letter)
 
-            # # Step 6: Plugboard
-            # letter = self.plugboard.get(letter, letter)
+            # Step 6: Plugboard
+            letter = self.plugboard.get(letter, letter)
+            print("Plugboard output: " + letter)
 
             print("")
 
@@ -77,57 +78,32 @@ class EnigmaM3:
             encrypted_text += self._encrypt_letter(char)
         return encrypted_text
 
-    def decrypt(self, text):
-        return self.encrypt(text)
-
 class Rotor:
     def __init__(self, wiring, turnover):
         self.wiring = wiring
         self.turnover = turnover
 
     def encrypt_forward(self, letter, position, prev_position):
-        print(position)
-        print(ord(letter) - 65)
-        
         if prev_position == None: # ini bisa > atau >= belom tau
-            print((position + ord(letter) - 65) % 26)
-            print("con 1")
             return self.wiring[((position + ord(letter) - 65) % 26)]
         else:
-            print((position + ord(letter) - 65 - prev_position) % 26)
-            print("con 2")
             return self.wiring[((position + ord(letter) - 65 - prev_position) % 26)]
 
     def encrypt_reflect(self, letter, prev_position):
         if 0 > (ord(letter) - 65) % 26:
-            print((0 + ord(letter) - 65) % 26)
-            print("")
             return self.wiring[((0 + ord(letter) - 65) % 26)]
         else:
-            print((0 + ord(letter) - 65 - prev_position) % 26)
-            print("")
             return self.wiring[((0 + ord(letter) - 65 - prev_position) % 26)]
         
         
     def encrypt_backward(self, letter, position, prev_position):
-        print(position)
-        print(ord(letter) - 65)
-
         if prev_position == None:
-            print(((ord(letter) - 65 + position) % 26) + 65)
-            print("msk")
             return chr(((ord(letter) - 65 + position) % 26) + 65)
         elif position == None:
-            # find index of letter in wiring
             index = self.wiring.find(letter)
-            print(index)
-            print("n")
             return chr(((index - prev_position) % 26) + 65)
         else:
-            # find index of letter in wiring
             index = self.wiring.find(letter)
-            print(index)
-            print("m")
             return chr(((index + position - prev_position) % 26) + 65)
 
 # config
@@ -147,26 +123,10 @@ reflector_B = Rotor(reflector_B_wiring, '')
 rotor_config = [rotor_I, rotor_II, rotor_III]
 rotor_positions = [ord('A') - 65, ord('A') - 65, ord('A') - 65]
 reflector_config = reflector_B
-plugboard_config = [(None, None), (None, None), (None, None), (None, None), (None, None), (None, None)]
+plugboard_config = [("A", "B")]
 
 enigma = EnigmaM3(rotor_config, rotor_positions, reflector_config, plugboard_config)
 
-plaintext = 'AAAAAAAAAAAAAAAAAAAAAAAAA'
+plaintext = 'AAA'
 ciphertext = enigma.encrypt(plaintext)
 print('Ciphertext:', ciphertext)
-
-
-
-
-
-
-
-
-
-
-
-
-
-# # Dekripsi teks
-# decrypted_text = enigma.decrypt(ciphertext)
-# print('Decrypted text:', decrypted_text)
