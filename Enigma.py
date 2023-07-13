@@ -70,7 +70,7 @@ class EnigmaM3:
 
             print("")
 
-        return letter
+        return letter if letter.isupper() else ''
 
     def encrypt(self, text):
         encrypted_text = ''
