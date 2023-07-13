@@ -18,16 +18,21 @@ class EnigmaM3:
         return plugboard
 
     def _rotate_rotors(self):
-        # rotate the rightmost rotor
-        self.positions[2] = (self.positions[2] + 1) % 26
-
-        # rotate the middle rotor
-        if self.positions[2] == ord(self.rotors[2].turnover) + 1  - 65:
+        # if no turnover, rotate the rightmost rotor
+        if self.positions[2] != ord(self.rotors[2].turnover) - 65 and self.positions[1] != ord(self.rotors[1].turnover) - 65:
+            self.positions[2] = (self.positions[2] + 1) % 26
+        # if right rotor is at turnover, rotate the middle rotor and the right rotor
+        elif self.positions[2] == ord(self.rotors[2].turnover) - 65:
             self.positions[1] = (self.positions[1] + 1) % 26
-
-        # rotate the leftmost rotor
-        if self.positions[1] == ord(self.rotors[1].turnover) + 1 - 65:
+            self.positions[2] = (self.positions[2] + 1) % 26
+            # if middle rotor is at turnover, rotate the left rotor
+            if self.positions[1] - 1 == ord(self.rotors[1].turnover) - 65:
+                self.positions[0] = (self.positions[0] + 1) % 26
+        # if middle rotor is at turnover, rotate the left rotor, middle rotor, and right rotor
+        elif self.positions[1] == ord(self.rotors[1].turnover) - 65:
             self.positions[0] = (self.positions[0] + 1) % 26
+            self.positions[1] = (self.positions[1] + 1) % 26
+            self.positions[2] = (self.positions[2] + 1) % 26
 
         print(chr(self.positions[0] + 65) + chr(self.positions[1] + 65) + chr(self.positions[2] + 65))
 
