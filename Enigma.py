@@ -32,43 +32,42 @@ class EnigmaM3:
         print(chr(self.positions[0] + 65) + chr(self.positions[1] + 65) + chr(self.positions[2] + 65))
 
     def _encrypt_letter(self, letter):
-        if letter in string.ascii_uppercase:
-            letter = letter.upper()
+        letter = letter.upper()
 
-            # Step 1: Rotate Rotors
-            self._rotate_rotors()
+        # Step 1: Rotate Rotors
+        self._rotate_rotors()
 
-            # Step 2: Plugboard
-            letter = self.plugboard.get(letter, letter)
-            print("Plugboard input: " + letter)
+        # Step 2: Plugboard
+        letter = self.plugboard.get(letter, letter)
+        print("Plugboard input: " + letter)
 
-            # Step 3: Rotors (forward)
-            letter = self.rotors[2].encrypt_forward(letter, self.positions[2], None)
-            print("Rotor " + str(3) + ": " + letter)
-            letter = self.rotors[1].encrypt_forward(letter, self.positions[1], self.positions[2])
-            print("Rotor " + str(2) + ": " + letter)
-            letter = self.rotors[0].encrypt_forward(letter, self.positions[0], self.positions[1])
-            print("Rotor " + str(1) + ": " + letter)
+        # Step 3: Rotors (forward)
+        letter = self.rotors[2].encrypt_forward(letter, self.positions[2], None)
+        print("Rotor " + str(3) + ": " + letter)
+        letter = self.rotors[1].encrypt_forward(letter, self.positions[1], self.positions[2])
+        print("Rotor " + str(2) + ": " + letter)
+        letter = self.rotors[0].encrypt_forward(letter, self.positions[0], self.positions[1])
+        print("Rotor " + str(1) + ": " + letter)
 
-            # Step 4: Reflector
-            letter = self.reflector.encrypt_reflect(letter, self.positions[0])
-            print("Reflector: " + letter)
+        # Step 4: Reflector
+        letter = self.reflector.encrypt_reflect(letter, self.positions[0])
+        print("Reflector: " + letter)
 
-            # Step 5: Rotors (backward)
-            letter = self.rotors[0].encrypt_backward(letter, self.positions[0], None)
-            print("Rotor " + str(1) + ": " + letter)
-            letter = self.rotors[0].encrypt_backward(letter, self.positions[1], self.positions[0])
-            print("Rotor " + str(2) + ": " + letter)
-            letter = self.rotors[1].encrypt_backward(letter, self.positions[2], self.positions[1])
-            print("Rotor " + str(3) + ": " + letter)
-            letter = self.rotors[2].encrypt_backward(letter, None, self.positions[2])
-            print("Result: " + letter)
+        # Step 5: Rotors (backward)
+        letter = self.rotors[0].encrypt_backward(letter, self.positions[0], None)
+        print("Rotor " + str(1) + ": " + letter)
+        letter = self.rotors[0].encrypt_backward(letter, self.positions[1], self.positions[0])
+        print("Rotor " + str(2) + ": " + letter)
+        letter = self.rotors[1].encrypt_backward(letter, self.positions[2], self.positions[1])
+        print("Rotor " + str(3) + ": " + letter)
+        letter = self.rotors[2].encrypt_backward(letter, None, self.positions[2])
+        print("Result: " + letter)
 
-            # Step 6: Plugboard
-            letter = self.plugboard.get(letter, letter)
-            print("Plugboard output: " + letter)
+        # Step 6: Plugboard
+        letter = self.plugboard.get(letter, letter)
+        print("Plugboard output: " + letter)
 
-            print("")
+        print("")
 
         return letter if letter.isupper() else ''
 

@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+from tkinter import messagebox
 import Enigma
 import Config
 
@@ -112,11 +113,15 @@ class EnigmaGUI:
         for entry1, entry2 in self.plugboard_entries:
             letter1 = entry1.get().upper()
             letter2 = entry2.get().upper()
+            for plug in self.plugboard_config:
+                if letter1 in plug or letter2 in plug:
+                    messagebox.showerror("Error", "There are duplicate letters in the plugboard configuration. Program will only use the first instance of each letter.")
+                    return
             if letter1 and letter2:
                 self.plugboard_config.append((letter1, letter2))
 
-        # Update Enigma Machine
-        self.enigma = Enigma.EnigmaM3(self.rotor_config, self.rotor_positions, self.reflector_config, self.plugboard_config)
+                # Update Enigma Machine
+                self.enigma = Enigma.EnigmaM3(self.rotor_config, self.rotor_positions, self.reflector_config, self.plugboard_config)
 
     def run(self):
         self.root.mainloop()
