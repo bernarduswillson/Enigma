@@ -1,5 +1,3 @@
-import string
-
 class EnigmaM3:
     def __init__(self, rotor_config, rotor_positions, reflector_config, plugboard_config=None):
         self.rotors = rotor_config

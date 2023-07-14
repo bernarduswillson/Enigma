@@ -88,6 +88,7 @@ class EnigmaGUI:
     def encrypt_text(self, plaintext):
         self.update_configuration()
         ciphertext = self.enigma.encrypt(plaintext)
+        print("Ciphertext: " + ciphertext)
         self.ciphertext_text.delete('1.0', tk.END)
         self.ciphertext_text.insert(tk.END, ciphertext)
 
