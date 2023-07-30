@@ -35,6 +35,10 @@ class EnigmaM3:
         print(chr(self.positions[0] + 65) + chr(self.positions[1] + 65) + chr(self.positions[2] + 65))
 
     def _encrypt_letter(self, letter):
+        # handle space
+        if letter == ' ': 
+            return letter
+
         letter = letter.upper()
 
         # Step 1: Rotate Rotors
